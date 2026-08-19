@@ -1,0 +1,98 @@
+// ============================================================
+//  PRODUCTION DASHBOARD — Google Apps Script
+//  ✅ Data Source: "Master Record" ONLY
+//  ❌ Daily Record fallback REMOVED permanently
+// ============================================================
+
+function doGet(e) {
+  // ✅ Check if 'e' exists to prevent crash when running manually in the script editor
+  const params = (e && e.parameter) ? e.parameter : {};
+  const output = ContentService.createTextOutput();
+  output.setMimeType(ContentService.MimeType.JSON);
+
+  try {
+    const result = getDashboardData(params);
+    output.setContent(JSON.stringify(result));
+  } catch (err) {
+    output.setContent(JSON.stringify({ error: err.message }));
+  }
+
+  return output;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Main function — called by doGet
+//  ALWAYS reads from "Master Record" sheet
+// ─────────────────────────────────────────────────────────────
+function getDashboardData(params) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const tz = ss.getSpreadsheetTimeZone(); // ✅ Use Spreadsheet's own timezone
+
+  // STRICT: Look for "Master Record" sheet, with flexible fallback if renamed
+  let sheetName = 'Master Record';
+  let sheet = ss.getSheetByName(sheetName);
+  
+  if (!sheet) {
+    const sheets = ss.getSheets();
+    const found = sheets.find(s => s.getName().trim().toLowerCase().includes('master'));
+    if (found) {
+      sheet = found;
+      sheetName = sheet.getName();
+    } else if (sheets.length > 0) {
+      sheet = sheets[0];
+      sheetName = sheet.getName();
+    }
+  }
+
+  // If no sheet exists in spreadsheet at all, return error
+  if (!sheet) {
+    return {
+      rawData: [],
+      error: '❌ No valid worksheet found in Google Sheet!',
+      debug: { sourceUsed: 'NONE', sheetRequested: sheetName }
+    };
+  }
+
+  // --- Read all data from Master Record sheet ---
+  const data = sheet.getDataRange().getValues();
+  if (data.length < 2) {
+    return {
+      rawData: [],
+      debug: { sourceUsed: sheetName, totalRows: 0 },
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  const headers = data[0].map(h => String(h).trim());
+  const rows = data.slice(1);
+
+  // --- Convert rows to objects ---
+  const rawData = rows.map(row => {
+    const obj = {};
+    headers.forEach((h, i) => {
+      let val = row[i];
+      // ✅ Use Spreadsheet's timezone to avoid date shift (e.g., 29 Apr becoming 28 Apr)
+      if (val instanceof Date) {
+        obj[h] = Utilities.formatDate(val, tz, 'yyyy-MM-dd');
+      } else {
+        obj[h] = (val !== '' && val !== null && val !== undefined) ? val : '';
+      }
+    });
+    return obj;
+  }).filter(row => {
+    // Remove completely empty rows
+    return Object.values(row).some(v => v !== '' && v !== null && v !== undefined);
+  });
+
+  // --- Return response ---
+  return {
+    rawData: rawData,
+    debug: {
+      sourceUsed: sheetName,       // Always "Master Record"
+      totalRows: rawData.length,
+      timezone: tz,
+      lastUpdated: Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm:ss')
+    },
+    lastUpdated: new Date().getTime()
+  };
+}
