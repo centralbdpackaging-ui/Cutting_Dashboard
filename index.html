@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-en="Production Dashboard 2026 | Hourly Cutting" data-bn="প্রোডাকশন ড্যাশবোর্ড ২০২৬ | আওয়ারলি কাটিং">
+    Production Dashboard 2026 | Hourly Cutting</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app-shell">
+    <div id="content-wrapper">
+      <header>
+        <div class="header-left">
+          <div class="logo" id="dynamicPageTitle" data-en="CUTTING PERFORMANCE" data-bn="কাটিং পারফরম্যান্স">CUTTING PERFORMANCE</div>
+        </div>
+
+        <div class="header-center">
+          <div id="liveClock" style="font-size: 16px; font-weight: bold; color: white; margin-right: 15px;">00:00:00</div>
+          <input type="date" id="datePicker">
+          <div class="shift-group" id="shiftButtonGroup">
+            <button class="shift-btn active" data-shift="Day" data-en="☀️ DAY" data-bn="☀️ দিন">☀️ DAY</button>
+            <button class="shift-btn" data-shift="Night" data-en="🌙 NIGHT" data-bn="🌙 রাত">🌙 NIGHT</button>
+            <button class="shift-btn" data-shift="Full" data-en="🗓️ 24H" data-bn="🗓️ ২৪ ঘণ্টা">🗓️ 24H</button>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div style="text-align: right;">
+            <div><span data-en="Last Update Time:" data-bn="সর্বশেষ আপডেট সময়:">Last Update Time:</span> <span id="lastUpdated" class="blink">--:--:--</span></div>
+          </div>
+          <button id="refreshBtn" class="header-icon-btn" title="Refresh Dashboard">🔄</button>
+          <button id="presModeBtn" class="header-icon-btn" title="Presentation Mode">📺</button>
+          <button id="prevSlideHeader" class="header-icon-btn" title="Previous Slide">❮</button>
+          <button id="nextSlideHeader" class="header-icon-btn" title="Next Slide">❯</button>
+          <button id="playPauseBtn" class="header-icon-btn" title="Pause Auto-Slide">⏸️</button>
+          <button id="settingsBtn" class="header-icon-btn" title="Dashboard Controller">⚙️</button>
+        </div>
+      </header>
+
+      <main>
+        <div class="slide-container">
+          <!-- Slide 0: OVERALL SUMMARY -->
+          <section class="slide active" id="slide-0">
+            <div class="slide-title-banner" id="slide-banner-title" data-en="CUTTING PERFORMANCE" data-bn="কাটিং পারফরম্যান্স">CUTTING PERFORMANCE</div>
+
+            <div class="summary-kpi-grid">
+              <div class="summary-kpi-card">
+                <div class="kpi-lbl" data-en="TARGET" data-bn="লক্ষ্যমাত্রা">TARGET</div>
+                <div class="kpi-val target-blue" id="sum-total-target">0</div>
+                <div class="icon-box" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); opacity: 0.2; color:var(--target-blue);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:60px; height:60px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                </div>
+              </div>
+              <div class="summary-kpi-card">
+                <div class="kpi-lbl" data-en="PRODUCTION" data-bn="উৎপাদন">PRODUCTION</div>
+                <div class="kpi-val prod-green" id="sum-total-prod">0</div>
+                <div class="icon-box" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); opacity: 0.2; color:var(--prod-green);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:60px; height:60px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                </div>
+              </div>
+              <div class="summary-kpi-card">
+                <div class="kpi-lbl" data-en="ACHIEVEMENT" data-bn="অর্জিত">ACHIEVEMENT</div>
+                <div class="kpi-val ach-orange" id="sum-total-pct">0%</div>
+                <div class="icon-box" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); opacity: 0.2; color:var(--ach-orange);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:60px; height:60px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55.47.98.97 1.21C11.47 18.44 12 19 12 19s.53-.56 1.03-.79c.5-.23.97-.66.97-1.21v-2.34"></path><path d="M12 15a5 5 0 1 0-5-5"></path></svg>
+                </div>
+              </div>
+              <div class="summary-kpi-card">
+                <div class="kpi-lbl" data-en="RUNNING MACHINES" data-bn="চলমান মেশিন">RUNNING MACHINES</div>
+                <div class="kpi-val" id="sum-running-count">0 <span style="font-size: 20px; color: var(--text-muted);">/ 24</span></div>
+                <div class="icon-box" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); opacity: 0.2; color:var(--accent-blue);">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:60px; height:60px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="summary-sections-grid">
+              <!-- Side Seal Summary -->
+              <div class="section-card">
+                <div class="section-title" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                  <span data-en="SIDE SEAL" data-bn="সাইড সিল">SIDE SEAL</span>
+                </div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Target"
+                    data-bn="লক্ষ্যমাত্রা">Target</span><span class="metric-val target-blue" id="ss-sum-target">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Production"
+                    data-bn="উৎপাদন">Production</span><span class="metric-val prod-green" id="ss-sum-prod">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Achievement"
+                    data-bn="অর্জিত">Achievement</span><span class="metric-val ach-orange" id="ss-sum-pct">0%</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Balance"
+                    data-bn="অবশিষ্ট পরিমাণ">Balance</span><span class="metric-val rem-yellow"
+                    id="ss-sum-rem">0</span></div>
+                <div class="mini-stats">
+                  <div class="mini-box"><span class="mini-val green" id="ss-run-count">0</span><span class="mini-lbl"
+                      data-en="Running" data-bn="চলমান">Running</span></div>
+                  <div class="mini-box"><span class="mini-val yellow" id="ss-idle-count">0</span><span class="mini-lbl"
+                      data-en="Idle" data-bn="আইডেল">Idle</span></div>
+                  <div class="mini-box"><span class="mini-val red" id="ss-bd-count">0</span><span class="mini-lbl"
+                      data-en="Breakdown" data-bn="ব্রেকডাউন">Breakdown</span></div>
+                </div>
+              </div>
+
+              <!-- Bottom Summary -->
+              <div class="section-card">
+                <div class="section-title" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                  <span data-en="BOTTOM" data-bn="বটম">BOTTOM</span>
+                </div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Target" data-bn="লক্ষ্যমাত্রা">Target</span><span class="metric-val target-blue"
+                    id="bt-sum-target">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Production" data-bn="উৎপাদন">Production</span><span class="metric-val prod-green"
+                    id="bt-sum-prod">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Achievement" data-bn="অর্জিত">Achievement</span><span class="metric-val ach-orange"
+                    id="bt-sum-pct">0%</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Balance" data-bn="অবশিষ্ট পরিমাণ">Balance</span><span class="metric-val rem-yellow"
+                    id="bt-sum-rem">0</span></div>
+                <div class="mini-stats">
+                  <div class="mini-box"><span class="mini-val green" id="bt-run-count">0</span><span
+                      class="mini-lbl" data-en="Running" data-bn="চলমান">Running</span></div>
+                  <div class="mini-box"><span class="mini-val yellow" id="bt-idle-count">0</span><span
+                      class="mini-lbl" data-en="Idle" data-bn="আইডেল">Idle</span></div>
+                  <div class="mini-box"><span class="mini-val red" id="bt-bd-count">0</span><span
+                      class="mini-lbl" data-en="Breakdown" data-bn="ব্রেকডাউন">Breakdown</span></div>
+                </div>
+              </div>
+
+              <!-- Zip Lock Summary -->
+              <div class="section-card">
+                <div class="section-title" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                  <span data-en="ZIP LOCK" data-bn="জিপ লক">ZIP LOCK</span>
+                </div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Target" data-bn="লক্ষ্যমাত্রা">Target</span><span class="metric-val target-blue"
+                    id="zl-sum-target">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Production" data-bn="উৎপাদন">Production</span><span class="metric-val prod-green"
+                    id="zl-sum-prod">0</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Achievement" data-bn="অর্জিত">Achievement</span><span class="metric-val ach-orange"
+                    id="zl-sum-pct">0%</span></div>
+                <div class="metric-row"><span class="metric-lbl" data-en="Balance" data-bn="অবশিষ্ট পরিমাণ">Balance</span><span class="metric-val rem-yellow"
+                    id="zl-sum-rem">0</span></div>
+                <div class="mini-stats">
+                  <div class="mini-box"><span class="mini-val green" id="zl-run-count">0</span><span
+                      class="mini-lbl" data-en="Running" data-bn="চলমান">Running</span></div>
+                  <div class="mini-box"><span class="mini-val yellow" id="zl-idle-count">0</span><span
+                      class="mini-lbl" data-en="Idle" data-bn="আইডেল">Idle</span></div>
+                  <div class="mini-box"><span class="mini-val red" id="zl-bd-count">0</span><span
+                      class="mini-lbl" data-en="Breakdown" data-bn="ব্রেকডাউন">Breakdown</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section Slides -->
+          <section class="slide" id="slide-1">
+            <div class="slide-title-banner" data-en="SIDE SEAL MACHINES" data-bn="সাইড সিল মেশিনসমূহ">SIDE SEAL MACHINES
+            </div>
+            <div class="machine-grid" id="ss-grid"></div>
+          </section>
+          <section class="slide" id="slide-2">
+            <div class="slide-title-banner" data-en="BOTTOM MACHINES" data-bn="বটম মেশিনসমূহ">BOTTOM MACHINES</div>
+            <div class="machine-grid" id="bt-grid"></div>
+          </section>
+          <section class="slide" id="slide-3">
+            <div class="slide-title-banner" data-en="ZIP LOCK MACHINES" data-bn="জিপ লক মেশিনসমূহ">ZIP LOCK MACHINES
+            </div>
+            <div class="machine-grid" id="zl-grid"></div>
+          </section>
+          <section class="slide" id="slide-4">
+            <div class="slide-title-banner" data-en="MACHINE BREAKDOWN DETAILS" data-bn="মেশিন ব্রেকডাউন বিস্তারিত">
+              MACHINE BREAKDOWN DETAILS</div>
+            <div class="machine-grid" id="bd-grid"></div>
+          </section>
+          </section>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button id="prevSlideBtn" class="nav-arrow left" title="Previous Slide">❮</button>
+        <button id="nextSlideBtn" class="nav-arrow right" title="Next Slide">❯</button>
+      </main>
+
+      <footer>
+        <div class="ticker-wrap">
+          <div class="ticker-content" id="tickerMsg">✔ All machines are running within normal parameters.</div>
+        </div>
+      </footer>
+
+      <!-- Presentation Mode moved inside content-wrapper to fix blur/dimming on header/footer -->
+      <div id="presentationMode">
+        <button class="pres-close-btn" id="closePresBtn">×</button>
+        <div class="pres-animate-in pres-machine-name" id="presMachineName">MACHINE NAME</div>
+        <div class="pres-animate-in pres-status-badge" id="presStatus">RUNNING</div>
+        
+        <div class="pres-animate-in pres-ach-circle">
+          <div class="pres-ach-val" id="presAch">0%</div>
+          <div class="pres-ach-lbl" data-en="ACHIEVEMENT" data-bn="অর্জিত">ACHIEVEMENT</div>
+        </div>
+
+        <div class="pres-animate-in pres-kpi-container">
+          <div class="pres-kpi-item">
+            <div class="pres-kpi-lbl" data-en="PRODUCTION" data-bn="উৎপাদন">PRODUCTION</div>
+            <div class="pres-kpi-val" id="presProd" style="color:var(--prod-green);">0</div>
+          </div>
+          <div class="pres-kpi-item">
+            <div class="pres-kpi-lbl" data-en="TARGET" data-bn="লক্ষ্যমাত্রা">TARGET</div>
+            <div class="pres-kpi-val" id="presTarget" style="color:var(--target-blue);">0</div>
+          </div>
+        </div>
+
+        <!-- Reason for Breakdown or Idle -->
+        <div class="pres-animate-in pres-reason-box" id="presReason"></div>
+
+        <div class="pres-progress-bar-wrap">
+          <div class="pres-progress-bar" id="presProgressBar"></div>
+        </div>
+      </div>
+    </div> <!-- end content-wrapper -->
+
+    <!-- Dashboard Controller (Side Panel) -->
+    <aside id="settingsModal" class="side-panel">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 style="color:var(--accent-blue);" data-en="DASHBOARD CONTROLLER" data-bn="ড্যাশবোর্ড কন্ট্রোলার">DASHBOARD
+            CONTROLLER</h3>
+          <button id="closeModalBtn"
+            style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="control-btns">
+            <div class="slide-toggle-item">
+              <input type="checkbox" class="slide-toggle-cb" data-slide="0" checked title="Include in Auto-Slide">
+              <button class="ctrl-btn" data-slide="0" data-en="Cutting Performance" data-bn="কাটিং পারফরম্যান্স">Cutting Performance</button>
+            </div>
+            <div class="slide-toggle-item">
+              <input type="checkbox" class="slide-toggle-cb" data-slide="1" checked title="Include in Auto-Slide">
+              <button class="ctrl-btn" data-slide="1" data-en="Side Seal Machines" data-bn="সাইড সিল মেশিন">Side Seal
+                Machines</button>
+            </div>
+            <div class="slide-toggle-item">
+              <input type="checkbox" class="slide-toggle-cb" data-slide="2" checked title="Include in Auto-Slide">
+              <button class="ctrl-btn" data-slide="2" data-en="Bottom Machines" data-bn="বটম মেশিন">Bottom
+                Machines</button>
+            </div>
+            <div class="slide-toggle-item">
+              <input type="checkbox" class="slide-toggle-cb" data-slide="3" checked title="Include in Auto-Slide">
+              <button class="ctrl-btn" data-slide="3" data-en="Zip Lock Machines" data-bn="জিপ লক মেশিন">Zip Lock
+                Machines</button>
+            </div>
+            <div class="slide-toggle-item">
+              <input type="checkbox" class="slide-toggle-cb" data-slide="4" checked title="Include in Auto-Slide">
+              <button class="ctrl-btn" data-slide="4" data-en="Breakdown Details" data-bn="ব্রেকডাউন বিস্তারিত">Breakdown
+                Details</button>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="setting-item">
+              <label data-en="Language" data-bn="ভাষা">Language</label>
+              <select id="langSelect" class="styled-select">
+                <option value="en">English</option>
+                <option value="bn">বাংলা</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label data-en="Zoom Level" data-bn="জুম লেভেল">Zoom Level</label>
+              <input type="range" id="zoomRange" min="0.5" max="1.5" step="0.1" value="1.0">
+              <span id="zoomVal">100%</span>
+            </div>
+            <div class="setting-item">
+              <label data-en="Slide Speed" data-bn="স্লাইড স্পিড">⏱️ Slide Speed</label>
+              <input type="range" id="timerRange" min="3" max="60" step="1" value="10">
+              <span id="timerVal">10s</span>
+            </div>
+            <div class="setting-item">
+              <label data-en="Scroll Speed" data-bn="স্ক্রল স্পিড">🏃 Scroll Speed</label>
+              <input type="range" id="tickerSpeedRange" min="10" max="150" step="5" value="60">
+              <span id="tickerSpeedVal">60s</span>
+            </div>
+            <div class="setting-item" style="flex-direction:row; align-items:center; gap:10px;">
+              <input type="checkbox" id="autoSlideToggle" checked style="width:18px; height:18px;">
+              <label for="autoSlideToggle" style="font-weight:bold; cursor:pointer;" data-en="Enable Auto-Slide"
+                data-bn="অটো-স্লাইড চালু করুন">Enable Auto-Slide</label>
+            </div>
+          </div>
+
+          <div class="config-actions">
+            <button id="exportConfigBtn" class="action-btn" data-en="💾 Export Config" data-bn="💾 কনফিগ এক্সপোর্ট">💾
+              Export Config</button>
+            <button id="importConfigBtn" class="action-btn" data-en="📂 Import Config" data-bn="📂 কনফিগ ইমপোর্ট">📂
+              Import Config</button>
+            <input type="file" id="configFile" style="display:none;" accept=".json">
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Overlays -->
+  <div id="loadingOverlay" class="overlay" style="display:none;">
+    <div class="loader"></div>
+    <p data-en="Fetching live data..." data-bn="লাইভ ডাটা লোড হচ্ছে...">Fetching live data...</p>
+  </div>
+  <div id="errorOverlay" class="overlay" style="display:none;">
+    <div class="error-box">
+      <h3 data-en="Data Fetch Failed" data-bn="ডাটা ফেচ ব্যর্থ হয়েছে">Data Fetch Failed</h3>
+      <p id="errorMsg"></p>
+      <button onclick="loadData()" data-en="Retry" data-bn="আবার চেষ্টা করুন">Retry</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
